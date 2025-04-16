@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+</head>
+<body>
+    <h1>Магазин</h1>
+    <div id="shopItems"></div>
+
+    <script>
+        function loadShop() {
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+            let shopContainer = document.getElementById("shopItems");
+            shopContainer.innerHTML = "";
+
+            products.forEach(product => {
+                if (product.status === "approved") {
+                    let productDiv = document.createElement("div");
+                    productDiv.innerHTML = `
+                        <h2>${product.name}</h2>
+                        <p>${product.description}</p>
+                        <p>Цена: ${product.price} ${product.currency}</p>
+                        <button onclick="addToCart('${product.name}', '${product.price}', '${product.currency}')">Добавить в корзину</button>
+                        <hr>
+                    `;
+                    shopContainer.appendChild(productDiv);
+                }
+            });
+        }
+
+        function addToCart(name, price, currency) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push({ name, price, currency });
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Товар добавлен в корзину!");
+        }
+
+        loadShop();
+    </script>
+</body>
+</html>

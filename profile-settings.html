@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile Settings - nokunkiShop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      width: 320px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #f8b400;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #d89b00;
+    }
+    img {
+      margin: 10px auto;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+    .back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #333;
+    }
+    .custom-file-upload {
+      display: inline-block;
+      padding: 10px;
+      background-color: #f8b400;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .custom-file-upload:hover {
+      background-color: #d89b00;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .preset-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      object-fit: cover;
+      border: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .preset-avatar:hover {
+      border-color: #f8b400;
+    }
+    #avatarPickerModal {
+      animation: fadeIn 0.3s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="goBack()">←</button>
+
+<div class="container">
+  <h2 id="greeting">Hello, User!</h2>
+  <img id="avatar" src="" style="display: none;" />
+
+
+  <label class="custom-file-upload" for="avatarUpload" onclick="openAvatarModal()">📷 Upload Avatar</label>
+  <input type="file" id="avatarUpload" accept="image/*" capture="environment" onchange="uploadAvatar()" />
+
+  <input type="text" id="newUsername" placeholder="New Username" />
+  <button onclick="changeUsername()">Change Username</button>
+
+  <input type="password" id="newPassword" placeholder="New Password" />
+  <button onclick="changePassword()">Change Password</button>
+
+  <button id="becomeSellerBtn" onclick="becomeSeller()">Become a Seller</button>
+  <button onclick="viewMyItems()">My Items & Stats</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div id="avatarPickerModal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+  <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; width: 300px;">
+    <h3>Select an avatar</h3>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0;">
+      <img src="avatar1.png" class="preset-avatar" onclick="selectPresetAvatar('avatar1.png')" />
+      <img src="avatar2.png" class="preset-avatar" onclick="selectPresetAvatar('avatar2.png')" />
+      <img src="avatar3.png" class="preset-avatar" onclick="selectPresetAvatar('avatar3.png')" />
+      <img src="avatar4.png" class="preset-avatar" onclick="selectPresetAvatar('avatar4.png')" />
+    </div>
+    <button onclick="openCamera()">📷 Use Camera</button>
+    <button onclick="openGallery()">From Gallery</button>
+    <br><br>
+    <button onclick="closeAvatarModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+  const username = localStorage.getItem("currentUser");
+  const users = JSON.parse(localStorage.getItem("users")) || {};
+  const isSeller = users[username]?.seller;
+
+  document.getElementById("greeting").innerText = `Hello, ${username}!`;
+
+  if (isSeller) {
+    document.getElementById("becomeSellerBtn").style.display = "none";
+  }
+
+  if (!users[username].avatar) {
+    users[username].avatar = "default-avatar.png";
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+  const avatar = users[username].avatar;
+  const img = document.getElementById("avatar");
+  img.src = avatar;
+  img.style.display = "block";
+
+  function uploadAvatar() {
+    const file = document.getElementById("avatarUpload").files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("avatar").src = e.target.result;
+        users[username].avatar = e.target.result;
+        localStorage.setItem("users", JSON.stringify(users));
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function changeUsername() {
+    const newUsername = document.getElementById("newUsername").value.trim();
+    if (!newUsername || users[newUsername]) {
+      alert("Invalid or taken username.");
+      return;
+    }
+
+    users[newUsername] = { ...users[username] };
+    delete users[username];
+
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("currentUser", newUsername);
+    alert("Username changed!");
+    location.reload();
+  }
+
+  function changePassword() {
+    const newPassword = document.getElementById("newPassword").value;
+    if (!newPassword) return alert("Enter a password.");
+
+    users[username].password = newPassword;
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Password changed!");
+  }
+
+  function becomeSeller() {
+    users[username].seller = true;
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("You are now a seller!");
+    location.reload();
+  }
+
+  function viewMyItems() {
+    if (!users[username].seller) {
+      alert("Only sellers can view items!");
+    } else {
+      window.location.href = "my-products.html";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("currentUser");
+    window.location.href = "ShopLogIn.html";
+  }
+
+  function goBack() {
+    window.location.href = "ShopLogIn.html";
+  }
+
+  function openAvatarModal() {
+    document.getElementById("avatarPickerModal").style.display = "flex";
+  }
+
+  function closeAvatarModal() {
+    document.getElementById("avatarPickerModal").style.display = "none";
+  }
+
+  function selectPresetAvatar(avatarSrc) {
+    document.getElementById("avatar").src = avatarSrc;
+    users[username].avatar = avatarSrc;
+    localStorage.setItem("users", JSON.stringify(users));
+    closeAvatarModal();
+  }
+
+  function openCamera() {
+    document.getElementById("avatarUpload").setAttribute("capture", "environment");
+    document.getElementById("avatarUpload").click();
+    closeAvatarModal();
+  }
+
+  function openGallery() {
+    document.getElementById("avatarUpload").removeAttribute("capture");
+    document.getElementById("avatarUpload").click();
+    closeAvatarModal();
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderation Panel</title>
+</head>
+<body>
+    <h1>Товары на модерации</h1>
+    <div id="pendingProducts"></div>
+
+    <script>
+        function loadPendingProducts() {
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+            let pendingContainer = document.getElementById("pendingProducts");
+            pendingContainer.innerHTML = "";
+
+            products.forEach((product, index) => {
+                if (product.status === "pending") {
+                    let productDiv = document.createElement("div");
+                    productDiv.innerHTML = `
+                        <h2>${product.name}</h2>
+                        <p>${product.description}</p>
+                        <p>Цена: ${product.price} ${product.currency}</p>
+                        <button onclick="approveProduct(${index})">Одобрить</button>
+                        <button onclick="rejectProduct(${index})">Отклонить</button>
+                        <hr>
+                    `;
+                    pendingContainer.appendChild(productDiv);
+                }
+            });
+        }
+
+        function approveProduct(index) {
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+            products[index].status = "approved"; // Меняем статус на "Одобрен"
+            localStorage.setItem("products", JSON.stringify(products));
+            loadPendingProducts();
+        }
+
+        function rejectProduct(index) {
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+            products.splice(index, 1); // Удаляем товар
+            localStorage.setItem("products", JSON.stringify(products));
+            loadPendingProducts();
+        }
+
+        loadPendingProducts();
+    </script>
+</body>
+</html>

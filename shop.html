@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - nokunkiShop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .shop-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        .shop-button {
+            padding: 15px 25px;
+            font-size: 18px;
+            background-color: #f8b400;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .shop-button:hover {
+            background-color: #d89b00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to nokunkiShop!</h1>
+    <div class="shop-buttons">
+        <button class="shop-button" onclick="goToModels()">3D Models</button>
+        <button class="shop-button" onclick="goToGames()">Wild Horse Islands</button>
+    </div>
+
+<script>
+    function goToModels() {
+        window.location.href = "models.html";
+    }
+
+    function goToGames() {
+        window.location.href = "games.html";
+    }
+</script>
+
+</body>
+</html>

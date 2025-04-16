@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .panel {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #f8b400;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #d89b00;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel" id="devPanel">
+        <h2>Developer Panel</h2>
+        <button onclick="viewLogs()">View Logs</button>
+        <button onclick="manageUsers()">Manage Users</button>
+        <button onclick="siteSettings()">Site Settings</button>
+        <button onclick="resetDevStatus()" style="background-color: red;">Reset Developer Status</button>
+    </div>
+
+    <script>
+        if (localStorage.getItem("developer") !== "true") {
+            let password = prompt("Enter Developer Password:");
+            if (password === "nokunkiorG258742Klalaandkaka258742") { // Замени на свой пароль
+                localStorage.setItem("developer", "true");
+                alert("Access Granted");
+            } else {
+                alert("Access Denied");
+                window.location.href = "home.html";
+            }
+        }
+
+        function viewLogs() {
+            alert("Viewing logs...");
+        }
+        function manageUsers() {
+            alert("Managing users...");
+        }
+        function siteSettings() {
+            alert("Opening site settings...");
+        }
+        function resetDevStatus() {
+            localStorage.removeItem("developer");
+            alert("Developer status reset.");
+            window.location.href = "home.html";
+        }
+    </script>
+</body>
+</html>

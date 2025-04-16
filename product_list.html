@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>3D models</h1>
+<ul>
+        <li>
+            <h2>{{ model.name }}</h2>
+            <img src="{{ model.url }}" alt="{{ model.name }}" width="200">
+            <p>{{ model.description }}</p>
+            <p>Цена: tg{{model.price}}</p>
+            <a href="{{ product.file.url }}" download>download model</a>
+        </li>
+</ul>
+
+</body>
+</html>

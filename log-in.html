@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login/Register - nokunkiShop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      width: 300px;
+    }
+    h2 {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #f8b400;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #d89b00;
+    }
+    .switch {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .switch a {
+      color: #f8b400;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .switch a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LOGIN FORM -->
+  <div id="login-form">
+    <h2>Login</h2>
+    <input type="text" id="login-username" placeholder="Username" required />
+    <input type="password" id="login-password" placeholder="Password" required />
+    <button onclick="login()">Log in</button>
+    <div class="switch">
+      <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+    </div>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="register-form" style="display: none;">
+    <h2>Register</h2>
+    <input type="text" id="reg-username" placeholder="Username" />
+    <input type="password" id="reg-password" placeholder="Password" />
+    <button onclick="register()">Register</button>
+    <div class="switch">
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Переключение на форму регистрации
+  function showRegister() {
+    document.getElementById("login-form").style.display = "none";
+    document.getElementById("register-form").style.display = "block";
+  }
+
+  // Переключение на форму логина
+  function showLogin() {
+    document.getElementById("register-form").style.display = "none";
+    document.getElementById("login-form").style.display = "block";
+  }
+
+  // Регистрация нового пользователя
+  function register() {
+    const username = document.getElementById("reg-username").value;
+    const password = document.getElementById("reg-password").value;
+
+    if (!username || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+
+    // Проверка на существование пользователя
+    if (users[username]) {
+      alert("Username already exists!");
+      return;
+    }
+
+    // Добавляем нового пользователя в хранилище
+    users[username] = { password: password };
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Registration successful!");
+    showLogin();  // Переход к форме логина
+  }
+
+  // Логин пользователя
+  function login() {
+    const username = document.getElementById("login-username").value;
+    const password = document.getElementById("login-password").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+
+    // Проверка правильности логина и пароля
+    if (!users[username] || users[username].password !== password) {
+      alert("Invalid username or password.");
+      return;
+    }
+
+    // Сохранение состояния авторизации в localStorage
+    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem("currentUser", username);
+    alert("Login successful!");
+
+    // Переход на главную страницу после входа
+    window.location.href = "shopLogIn.html"; // Или другая страница
+  }
+</script>
+
+</body>
+</html>
