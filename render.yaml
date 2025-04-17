@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: nokunkiShoporg
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn main:application
+    runtime: python
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: nokunkiShoporg.settings
+      - key: PYTHON_VERSION
+        value: 3.12
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "nokunkiShoporg.onrender.com"
